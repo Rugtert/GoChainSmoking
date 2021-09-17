@@ -1,38 +1,30 @@
 package chain
 
 import (
-	"GoChainSmoking/datablock"
-	"GoChainSmoking/hasher"
 	"container/list"
-	"time"
 )
-
-
 
 func InitChain() *list.List {
 	var chain = list.New()
-	var block = datablock.Datablock{}
-	block.PreviousHash = ""
-	block.Data = []string{}
-	block.TimeStamp = time.Now().Unix()
-	block.BlockHash = hasher.GetBlockHash(block)
+	var block = Block{}
+	block.PreviousHash = []byte("")
+	block.Transactions = []*Transaction{}
+
 	chain.PushBack(block)
 	return chain
 }
 
+func AddToChain(data []*Transaction, chain *list.List) *list.List {
+	var block = Block{}
+	block.PreviousHash = GetLastBlock(chain).PreviousHash
+	block.Transactions = data
 
-func AddToChain(data []string, chain *list.List) *list.List {
-	var block = datablock.Datablock{}
-	block.PreviousHash = GetLastBlock(chain).BlockHash
-	block.Data = data
-	block.TimeStamp = time.Now().Unix()
-	block.BlockHash = hasher.GetBlockHash(block)
 	chain.PushBack(block)
 	return chain
 }
 
-func GetLastBlock(chain *list.List) datablock.Datablock {
+func GetLastBlock(chain *list.List) Block {
 	blockE := chain.Back()
-	var block = blockE.Value.(datablock.Datablock)
+	var block = blockE.Value.(Block)
 	return block
 }

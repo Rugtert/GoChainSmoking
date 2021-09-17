@@ -1,18 +1,17 @@
-package hasher
+package chain
 
 import (
-	"GoChainSmoking/datablock"
 	"bytes"
 	"crypto/sha256"
 	"encoding/gob"
 	"encoding/hex"
 )
 
-func GetBlockHash(block datablock.Datablock) string {
+func GetBlockHash(block Block) string {
 	buf := bytes.Buffer{}
 	encoder := gob.NewEncoder(&buf)
-	hashableBlock := datablock.HashLessBlock{
-		Data: block.Data,
+	hashableBlock := HashLessBlock{
+		Data:         block.Data,
 		PreviousHash: block.PreviousHash,
 		TimeStamp:    block.TimeStamp}
 	encoder.Encode(hashableBlock)
