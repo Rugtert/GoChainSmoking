@@ -44,13 +44,17 @@ func NewMerkleTree(data [][]byte) *MerkleTree {
 		nodes = append(nodes, *node)
 	}
 
-	for i := 0; i < len(data)/2; i++ {
-		var level []MerkleNode
+	for len(nodes) > 1 {
+		if len(nodes)%2 != 0 {
+			nodes = append(nodes, nodes[len(nodes)-1])
+		}
 
-		for j := 0; j < len(nodes); j += 2 {
-			node := NewMerkleNode(&nodes[j], &nodes[j+1], nil)
+		var level []MerkleNode
+		for i := 0; i < len(nodes); i += 2 {
+			node := NewMerkleNode(&nodes[i], &nodes[i+1], nil)
 			level = append(level, *node)
 		}
+
 		nodes = level
 	}
 

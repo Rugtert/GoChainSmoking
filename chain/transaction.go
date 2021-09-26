@@ -1,43 +1,31 @@
 package chain
 
 import (
-	"GoChainSmoking/util"
 	"bytes"
-	"crypto/sha256"
+	"crypto/rsa"
 	"encoding/gob"
-	"math/rand"
+
+	"github.com/mr-tron/base58"
 )
 
+// JUST ENCRYPT THE FUCKING MESSAGE MAN. USE THE RECIPIENTS PUBLIC KEY TO ENCRYPT AND PRIVATE KEY TO DECRYPT
+// https://stackoverflow.com/questions/38612279/how-to-send-a-rsa-publickey-over-a-tcp-connection-in-go
 type Transaction struct {
 	ID   []byte
-	Data []byte
+	msg  string
+	rcpt string
 }
 
-func (tx Transaction) Serialize() []byte {
-	var buffer bytes.Buffer
-	encoder := gob.NewEncoder(&buffer)
-	err := encoder.Encode(tx)
-	util.HandleError(err)
-	return buffer.Bytes()
+func CreateTransaction(msg string, rcpt string) {
+
 }
 
-func RandomTrn() *Transaction {
-	rndBytes := make([]byte, 50)
-	_, err := rand.Read(rndBytes)
-	util.HandleError(err)
-
-	trn := Transaction{nil, rndBytes}
-	trn.ID = trn.Hash()
-	return &trn
-}
-
-func CreateTransaction(data string) *Transaction {
-	trn := Transaction{nil, []byte(data)}
-	trn.ID = trn.Hash()
-	return &trn
-}
-
-func (trn *Transaction) Hash() []byte {
-	txHash := sha256.Sum256(trn.Serialize())
-	return txHash[:]
+func EncodeMsg(msg string, rcpt string) {
+	var pub = rsa.PublicKey
+	var buf bytes.Buffer
+	pubKey, err := base58.Decode(rcpt)
+	dec := gob.NewDecoder(&buf)
+	var pub = dec.Decode(&pubKey)
+	rsa.EncryptOAEP()
+	ecdsa.
 }

@@ -1,30 +1,30 @@
 package chain
 
-import (
-	"container/list"
-)
+import "GoChainSmoking/wallet"
 
-func InitChain() *list.List {
-	var chain = list.New()
-	var block = Block{}
-	block.PreviousHash = []byte("")
-	block.Transactions = []*Transaction{}
+var chain []Block
 
-	chain.PushBack(block)
-	return chain
+func InitChain() ([]Block, wallet.Wallet) {
+	initwallet := wallet.CreateWallet()
+	genesistrn := CreateTransaction("genesis", initwallet, initwallet.PublicKey)
+
+	var block = CreateBlock(append([]*Transaction{}, genesistrn), nil)
+	chain = append(chain, *block)
 }
 
-func AddToChain(data []*Transaction, chain *list.List) *list.List {
-	var block = Block{}
-	block.PreviousHash = GetLastBlock(chain).PreviousHash
-	block.Transactions = data
-
-	chain.PushBack(block)
-	return chain
+func AddToChain(data []*Transaction) {
+	block := CreateBlock(data, GetLastBlock().Hash)
+	chain = append(chain, *block)
 }
 
-func GetLastBlock(chain *list.List) Block {
-	blockE := chain.Back()
-	var block = blockE.Value.(Block)
-	return block
+func GetLastBlock() *Block {
+	return &chain[len(chain)-1]
+}
+
+func GetBlockAt(index int) *Block {
+	return &chain[index]
+}
+
+func GetChain() []Block {
+	return chain
 }

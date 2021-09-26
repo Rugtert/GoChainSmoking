@@ -10,11 +10,8 @@ import (
 func GetBlockHash(block Block) string {
 	buf := bytes.Buffer{}
 	encoder := gob.NewEncoder(&buf)
-	hashableBlock := HashLessBlock{
-		Data:         block.Data,
-		PreviousHash: block.PreviousHash,
-		TimeStamp:    block.TimeStamp}
-	encoder.Encode(hashableBlock)
+
+	encoder.Encode(block)
 
 	hasher := sha256.New()
 	hasher.Write(buf.Bytes())

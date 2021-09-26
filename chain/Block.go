@@ -1,6 +1,11 @@
 package chain
 
+import (
+	"time"
+)
+
 type Block struct {
+	TimeStamp    int64
 	Hash         []byte
 	Transactions []*Transaction
 	PreviousHash []byte
@@ -14,4 +19,13 @@ func (block *Block) HashTransactions() []byte {
 	}
 	tree := NewMerkleTree(Hashes)
 	return tree.RootNode.Data
+}
+
+func CreateBlock(trns []*Transaction, previousHash []byte) *Block {
+	block := &Block{
+		TimeStamp:    time.Now().Unix(),
+		PreviousHash: previousHash,
+		Transactions: trns}
+	CreateProof(block)
+	return block
 }
