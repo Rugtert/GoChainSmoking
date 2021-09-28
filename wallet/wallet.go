@@ -8,18 +8,24 @@ import (
 )
 
 type Wallet struct {
-	privateKey rsa.PrivateKey
+	PrivateKey rsa.PrivateKey
 	PublicKey  rsa.PublicKey
-	address    string
+	Address    []byte
 }
 
 func CreateWallet() *Wallet {
-	priv, pub := util.CreateKeyPair()
-	base58address := base58.Encode(util.PublicKeyToBytes(&pub))
+	priv, pub := util.GenerateKeyPair()
+	base58address := base58.Encode(util.PublicKeyToBytes(pub))
 
 	Wallet := Wallet{
-		priv,
-		pub,
-		base58address}
+		*priv,
+		*pub,
+		[]byte(base58address)}
 	return &Wallet
+}
+
+func (w Wallet) Base58DecodeAddress() []byte {
+	res, err := base58.Decode(string(w.Address))
+	util.HandleError(err)
+	return res
 }

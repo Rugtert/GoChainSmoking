@@ -11,7 +11,7 @@ import (
 )
 
 // based on https://justinmeiners.github.io/tiny-blockchain/#1:7
-const Difficulty = 12
+const Difficulty = 8
 
 func CreateProof(b *Block) {
 	target := big.NewInt(1)
@@ -21,12 +21,13 @@ func CreateProof(b *Block) {
 
 	nonce := 0
 	for nonce < math.MaxInt64 {
-		blockData := bytes.Join([][]byte{
-			b.PreviousHash,
-			b.HashTransactions(),
-			ToHex(b.TimeStamp),
-			ToHex(int64(nonce)),
-			ToHex(int64(Difficulty))},
+		blockData := bytes.Join(
+			[][]byte{
+				b.PreviousHash,
+				b.HashTransactions(),
+				ToHex(b.TimeStamp),
+				ToHex(int64(nonce)),
+				ToHex(int64(Difficulty))},
 			[]byte{})
 		blockhash = sha256.Sum256(blockData)
 
@@ -34,8 +35,10 @@ func CreateProof(b *Block) {
 		if inthash.Cmp(target) == -1 {
 			fmt.Printf("\r%x\n", blockhash)
 			fmt.Printf("\r attempts %d\n", nonce)
+
 			b.Nonce = nonce
 			b.Hash = blockhash[:]
+
 			break
 		} else {
 			fmt.Printf("\r%x", blockhash)
@@ -43,7 +46,6 @@ func CreateProof(b *Block) {
 			nonce++
 		}
 	}
-
 }
 
 func ToHex(num int64) []byte {

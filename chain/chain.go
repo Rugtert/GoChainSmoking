@@ -4,12 +4,14 @@ import "GoChainSmoking/wallet"
 
 var chain []Block
 
-func InitChain() ([]Block, wallet.Wallet) {
+func InitChain() wallet.Wallet {
 	initwallet := wallet.CreateWallet()
-	genesistrn := CreateTransaction("genesis", initwallet, initwallet.PublicKey)
+	genesistrn := CreateTransaction("genesis", initwallet.Address, *initwallet)
 
-	var block = CreateBlock(append([]*Transaction{}, genesistrn), nil)
+	var block = CreateBlock(append([]*Transaction{}, &genesistrn), nil)
 	chain = append(chain, *block)
+
+	return *initwallet
 }
 
 func AddToChain(data []*Transaction) {
