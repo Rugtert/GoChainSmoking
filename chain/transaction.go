@@ -9,8 +9,6 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/gob"
-
-	"github.com/mr-tron/base58"
 )
 
 // JUST ENCRYPT THE FUCKING MESSAGE MAN. USE THE RECIPIENTS PUBLIC KEY TO ENCRYPT AND PRIVATE KEY TO DECRYPT
@@ -45,7 +43,7 @@ func (tx Transaction) Serialize() []byte {
 }
 
 func CreateTransaction(msg string, rcpt []byte, wallet wallet.Wallet) Transaction {
-	trn := Transaction{nil, []byte(msg), rcpt, nil, wallet.Base58DecodeAddress()}
+	trn := Transaction{nil, []byte(msg), rcpt, nil, util.PublicKeyToBytes(&wallet.PublicKey)}
 	trn.Msg = trn.EncodeMsg()
 	trn.Hash()
 	trn.Signature = trn.Sign(wallet.PrivateKey)
@@ -67,9 +65,7 @@ func (trn Transaction) Verify() bool {
 }
 
 func (trn Transaction) EncodeMsg() []byte {
-	pubKey, err := base58.Decode(string(trn.Rcpt))
-	util.HandleError(err)
-	pub := util.BytesToPublicKey(pubKey)
+	pub := util.BytesToPublicKey(trn.Rcpt)
 
 	res, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, pub, []byte(trn.Msg), nil)
 

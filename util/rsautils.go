@@ -6,6 +6,7 @@ import (
 	"crypto/sha512"
 	"crypto/x509"
 	"encoding/pem"
+	"fmt"
 	"log"
 )
 
@@ -31,6 +32,9 @@ func PrivateKeyToBytes(priv *rsa.PrivateKey) []byte {
 
 // PublicKeyToBytes public key to bytes
 func PublicKeyToBytes(pub *rsa.PublicKey) []byte {
+	if pub == nil {
+		fmt.Print("nilpub")
+	}
 	pubASN1, err := x509.MarshalPKIXPublicKey(pub)
 	HandleError(err)
 

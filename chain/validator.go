@@ -10,6 +10,13 @@ func (block *Block) ValidateBlock() bool {
 	target := big.NewInt(1)
 	target.Lsh(target, uint(256-Difficulty))
 	var intHash big.Int
+
+	if block.PreviousHash != nil {
+		if !GetBlockByHash(block.PreviousHash).ValidateBlock() {
+			return false
+		}
+	}
+
 	blockData := bytes.Join([][]byte{
 		block.PreviousHash,
 		block.HashTransactions(),

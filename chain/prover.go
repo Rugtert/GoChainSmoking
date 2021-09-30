@@ -11,14 +11,14 @@ import (
 )
 
 // based on https://justinmeiners.github.io/tiny-blockchain/#1:7
-const Difficulty = 8
+const Difficulty = 4
 
 func CreateProof(b *Block) {
 	target := big.NewInt(1)
 	target.Lsh(target, uint(256-Difficulty))
 	var blockhash [32]byte
 	var inthash big.Int
-
+	fmt.Printf("\r%d\n", target)
 	nonce := 0
 	for nonce < math.MaxInt64 {
 		blockData := bytes.Join(
