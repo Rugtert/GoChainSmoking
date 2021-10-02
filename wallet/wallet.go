@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"crypto/rsa"
 	"fmt"
-	"time"
 
 	"github.com/mr-tron/base58"
 )
@@ -37,19 +36,14 @@ func FindWalletByPubkey(pubKey []byte) *Wallet {
 }
 
 func CreateWallet() *Wallet {
-	fmt.Println(time.Now())
 
 	priv, pub := util.GenerateKeyPair()
-	fmt.Println(time.Now())
 	base58address := base58.Encode(util.PublicKeyHash(util.PublicKeyToBytes(pub)))
-	fmt.Println(time.Now())
 	Wallet := Wallet{
 		*priv,
 		*pub,
 		[]byte(base58address)}
-	fmt.Println(time.Now())
 	Wallets = append(Wallets, Wallet)
-	fmt.Println(time.Now())
 	return &Wallet
 }
 

@@ -11,7 +11,7 @@ import (
 )
 
 // based on https://justinmeiners.github.io/tiny-blockchain/#1:7
-const Difficulty = 4
+const Difficulty = 16
 
 func CreateProof(b *Block) {
 	target := big.NewInt(1)

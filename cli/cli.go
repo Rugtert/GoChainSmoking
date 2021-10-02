@@ -18,7 +18,7 @@ func InteractiveCli() {
 	for {
 		prompt := promptui.Select{
 			Label: "Choose command",
-			Items: []string{"Initialize chain", "Create wallet", "Create wallets", "Print all wallets", "Print last block", "get my trns", "transfer", "print chain", "generate random transactions"},
+			Items: []string{"Initialize chain", "Create wallet", "Create wallets", "Print all wallets", "Print last block", "get my trns", "transfer", "print chain", "generate random transactions", "edit random block"},
 		}
 
 		_, result, err := prompt.Run()
@@ -37,6 +37,8 @@ func InteractiveCli() {
 			printChain()
 		case "Print last block":
 			printLastBlock()
+		case "edit random block":
+			editRandomBlock()
 		case "transfer":
 			rcpt := promptui.Prompt{Label: "To what address?"}
 			src := promptui.Prompt{Label: "What is your address?"}
@@ -62,6 +64,7 @@ func InteractiveCli() {
 }
 
 func generateRandomTransactions(amount int) {
+	amount += 2
 	walletCount := len(wallet.Wallets)
 	if walletCount < 2 {
 		fmt.Println("Create more wallets first.")
@@ -153,4 +156,13 @@ func transfer(msg string, rcptAddress string, yourAddress string) {
 	srcwallet := wallet.FindWalletByAddress(yourAddress)
 	trn := chain.CreateTransaction(msg, util.PublicKeyToBytes(&rcptwallet.PublicKey), *srcwallet)
 	chain.AddToChain(append([]*chain.Transaction{}, &trn))
+}
+
+func editRandomBlock() {
+	c := chain.GetChain()
+	clen := len(c)
+	randblock := &c[rand.Intn(clen)]
+	randwal := wallet.Wallets[rand.Intn(len(wallet.Wallets))]
+	eviltrn := chain.CreateTransaction("evil trn", util.PublicKeyToBytes(&randwal.PublicKey), randwal)
+	randblock.Transactions = append(randblock.Transactions, &eviltrn)
 }
