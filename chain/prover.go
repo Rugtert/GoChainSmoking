@@ -18,7 +18,6 @@ func CreateProof(b *Block) {
 	target.Lsh(target, uint(256-Difficulty))
 	var blockhash [32]byte
 	var inthash big.Int
-	fmt.Printf("\r%d\n", target)
 	nonce := 0
 	for nonce < math.MaxInt64 {
 		blockData := bytes.Join(
@@ -33,8 +32,6 @@ func CreateProof(b *Block) {
 
 		inthash.SetBytes(blockhash[:])
 		if inthash.Cmp(target) == -1 {
-			fmt.Printf("\r%x\n", blockhash)
-			fmt.Printf("\r attempts %d\n", nonce)
 
 			b.Nonce = nonce
 			b.Hash = blockhash[:]

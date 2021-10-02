@@ -3,7 +3,6 @@ package chain
 import (
 	"bytes"
 	"crypto/sha256"
-	"fmt"
 	"math/big"
 )
 
@@ -17,7 +16,6 @@ func (block *Block) ValidateBlock() bool {
 			return false
 		}
 	}
-	fmt.Print(len(block.Transactions))
 	blockData := bytes.Join([][]byte{
 		block.PreviousHash,
 		block.HashTransactions(),
